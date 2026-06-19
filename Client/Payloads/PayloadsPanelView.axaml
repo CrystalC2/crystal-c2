@@ -1,0 +1,147 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Client.Payloads"
+             x:Class="Client.Payloads.PayloadsPanelView"
+             x:DataType="vm:PayloadsPanelViewModel"
+             Background="#0D1117">
+
+    <UserControl.Styles>
+        <Style Selector="Button.icon-btn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#6E7681"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5,3"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.icon-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#21262D"/>
+            <Setter Property="TextElement.Foreground" Value="#EF4444"/>
+        </Style>
+        <Style Selector="Button.panel-toggle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.panel-toggle:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+        </Style>
+        <Style Selector="Button.icon-btn-export">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#6E7681"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="5,3"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.icon-btn-export:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#21262D"/>
+            <Setter Property="TextElement.Foreground" Value="#E6EDF3"/>
+        </Style>
+        <Style Selector="Border.payload-row">
+            <Setter Property="Padding" Value="10,7"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Border.payload-row:pointerover">
+            <Setter Property="Background" Value="#161B22"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Panel header -->
+        <Border Grid.Row="0" Background="#161B22"
+                BorderBrush="#30363D" BorderThickness="0,1,0,1"
+                Padding="12,8">
+            <Grid ColumnDefinitions="*,Auto,Auto">
+                <Button Grid.Column="0" Classes="panel-toggle"
+                        Click="OnToggleExpandedClicked">
+                    <StackPanel Orientation="Horizontal" Spacing="6">
+                        <TextBlock Text="▾" FontSize="9" Foreground="#6E7681"
+                                   IsVisible="{Binding IsExpanded}"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="▸" FontSize="9" Foreground="#6E7681"
+                                   IsVisible="{Binding !IsExpanded}"
+                                   VerticalAlignment="Center"/>
+                        <TextBlock Text="PAYLOADS" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="#8B949E" LetterSpacing="1"/>
+                    </StackPanel>
+                </Button>
+                <Button Grid.Column="1" Classes="icon-btn"
+                        Content="⚡" FontSize="13"
+                        Foreground="#7C3AED"
+                        Click="OnGeneratePayloadClicked"
+                        ToolTip.Tip="Generate payload"/>
+                <Button Grid.Column="2" Classes="icon-btn"
+                        Content="+" FontSize="16" FontWeight="Bold"
+                        Foreground="#7C3AED"
+                        Click="OnAddPayloadClicked"
+                        ToolTip.Tip="Add payload"/>
+            </Grid>
+        </Border>
+
+        <!-- Content -->
+        <Grid Grid.Row="1" IsVisible="{Binding IsExpanded}">
+
+            <!-- Payload list -->
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          IsVisible="{Binding !HasNoPayloads}">
+                <ItemsControl ItemsSource="{Binding Payloads}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:PayloadItemViewModel">
+                            <Border Classes="payload-row">
+                                <Grid ColumnDefinitions="*,Auto,Auto">
+
+                                    <!-- Name + meta -->
+                                    <StackPanel Grid.Column="0" Spacing="1" VerticalAlignment="Center">
+                                        <TextBlock Text="{Binding Name}" FontSize="13"
+                                                   Foreground="#E6EDF3" FontWeight="Medium"/>
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="{Binding User}" FontSize="11"
+                                                       Foreground="#6E7681"/>
+                                            <TextBlock Text="·" FontSize="11" Foreground="#3D444D"
+                                                       IsVisible="{Binding HasYara}"/>
+                                            <TextBlock Text="yara" FontSize="11"
+                                                       Foreground="#7C3AED"
+                                                       IsVisible="{Binding HasYara}"/>
+                                            <TextBlock Text="·" FontSize="11" Foreground="#3D444D"
+                                                       IsVisible="{Binding Note, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                            <TextBlock Text="{Binding Note}" FontSize="11"
+                                                       Foreground="#6E7681"
+                                                       IsVisible="{Binding Note, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"/>
+                                        </StackPanel>
+                                    </StackPanel>
+
+                                    <!-- Export button -->
+                                    <Button Grid.Column="1" Classes="icon-btn-export"
+                                            Content="↓" ToolTip.Tip="Export payload"
+                                            Click="OnExportPayloadClicked"/>
+
+                                    <!-- Delete button -->
+                                    <Button Grid.Column="2" Classes="icon-btn"
+                                            Content="✕" ToolTip.Tip="Delete payload"
+                                            Click="OnDeletePayloadClicked"/>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+
+            <!-- Empty state -->
+            <StackPanel IsVisible="{Binding HasNoPayloads}"
+                        HorizontalAlignment="Center" VerticalAlignment="Center"
+                        Spacing="4" Opacity="0.35">
+                <TextBlock Text="No payloads" FontSize="13"
+                           Foreground="#8B949E" HorizontalAlignment="Center"/>
+            </StackPanel>
+
+        </Grid>
+    </Grid>
+</UserControl>

@@ -1,0 +1,192 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Client.MainWindow"
+        xmlns:converters="using:Client.Converters"
+        x:Class="Client.MainWindow.MainWindowView"
+        x:DataType="vm:MainWindowViewModel"
+        Title="CrystalC2"
+        Width="1600" Height="900"
+        MinWidth="800" MinHeight="500"
+        Background="#0D1117"
+        Icon="/Assets/logo.png">
+
+    <Window.Styles>
+        <Style Selector="TextBlock.header">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="LetterSpacing" Value="1"/>
+        </Style>
+        <Style Selector="TextBox.connect-input">
+            <Setter Property="Background" Value="#161B22"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="Foreground" Value="#E6EDF3"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+        </Style>
+        <Style Selector="TextBox.connect-input:focus">
+            <Setter Property="BorderBrush" Value="#7C3AED"/>
+        </Style>
+        <Style Selector="Button.ghost">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="6,4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="Button.ghost:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#21262D"/>
+        </Style>
+        <Style Selector="Button.danger-ghost">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#6B7280"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="4,2"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <Style Selector="Button.danger-ghost:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#3B1219"/>
+            <Setter Property="TextElement.Foreground" Value="#EF4444"/>
+        </Style>
+    </Window.Styles>
+
+    <Window.Resources>
+        <converters:BoolToGridLengthConverter x:Key="BoolToGridLength"/>
+    </Window.Resources>
+
+    <Grid RowDefinitions="44,*,32">
+
+        <!-- ── Title / Toolbar ── -->
+        <Border Grid.Row="0" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,0,0,1">
+            <Grid ColumnDefinitions="Auto,*,Auto" Margin="14,0">
+                <StackPanel Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                    <Border Width="8" Height="8" CornerRadius="4" Background="#7C3AED"/>
+                    <TextBlock Text="CrystalC2" FontWeight="Bold" FontSize="15"
+                               Foreground="#E6EDF3" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <!-- Connected badge -->
+                <Border Grid.Column="2" VerticalAlignment="Center"
+                        IsVisible="{Binding IsConnected}"
+                        Background="#0D2818" BorderBrush="#22C55E" BorderThickness="1"
+                        CornerRadius="5" Padding="10,4">
+                    <StackPanel Orientation="Horizontal" Spacing="7">
+                        <Ellipse Width="7" Height="7" Fill="#22C55E" VerticalAlignment="Center"/>
+                        <TextBlock Text="{Binding ConnectedTo}" Foreground="#22C55E"
+                                   FontSize="12" VerticalAlignment="Center"/>
+                        <Button Classes="ghost" Content="✕" FontSize="11" Padding="4,2"
+                                Command="{Binding DisconnectCommand}"
+                                ToolTip.Tip="Disconnect"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- ── Main area ── -->
+        <Grid Grid.Row="1">
+
+            <!-- Connect screen -->
+            <Border IsVisible="{Binding IsNotConnected}"
+                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                    Background="#161B22" CornerRadius="10"
+                    BorderBrush="#30363D" BorderThickness="1"
+                    Padding="36,32" Width="400">
+                <StackPanel Spacing="20">
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Connect to Server" FontSize="18" FontWeight="SemiBold"
+                                   Foreground="#E6EDF3"/>
+                        <TextBlock Text="Enter your server details below" FontSize="13"
+                                   Foreground="#8B949E"/>
+                    </StackPanel>
+
+                    <StackPanel Spacing="14">
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Server Address" Classes="header"/>
+                            <TextBox Classes="connect-input" Text="{Binding ServerAddress}"
+                                     Watermark="http://localhost:5000"/>
+                        </StackPanel>
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Username" Classes="header"/>
+                            <TextBox Classes="connect-input" Text="{Binding Username}"
+                                     Watermark="admin"/>
+                        </StackPanel>
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Password" Classes="header"/>
+                            <TextBox Classes="connect-input" Text="{Binding Password}"
+                                     PasswordChar="●" Watermark="password"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Error -->
+                    <Border IsVisible="{Binding ConnectionError, Converter={x:Static StringConverters.IsNotNullOrEmpty}}"
+                            Background="#2D1B1B" BorderBrush="#7F1D1D" BorderThickness="1"
+                            CornerRadius="6" Padding="10,8">
+                        <TextBlock Text="{Binding ConnectionError}" Foreground="#FCA5A5"
+                                   FontSize="12" TextWrapping="Wrap"/>
+                    </Border>
+
+                    <Button Classes="primary" HorizontalAlignment="Stretch"
+                            HorizontalContentAlignment="Center"
+                            Command="{Binding ConnectCommand}">
+                        <StackPanel Orientation="Horizontal" Spacing="8">
+                            <TextBlock IsVisible="{Binding IsConnecting}" Text="Connecting…"/>
+                            <TextBlock IsVisible="{Binding !IsConnecting}" Text="Connect"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+            </Border>
+
+            <!-- Main canvas (shown when connected) -->
+            <Grid IsVisible="{Binding IsConnected}"
+                  ColumnDefinitions="280,1,*">
+
+                <!-- Left column: listeners + payloads + scripts -->
+                <Grid Grid.Column="0">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="{Binding ListenersPanel.IsExpanded, Converter={StaticResource BoolToGridLength}}"/>
+                        <RowDefinition Height="1"/>
+                        <RowDefinition Height="{Binding PayloadsPanel.IsExpanded, Converter={StaticResource BoolToGridLength}}"/>
+                        <RowDefinition Height="1"/>
+                        <RowDefinition Height="{Binding ScriptsPanel.IsExpanded, Converter={StaticResource BoolToGridLength}}"/>
+                    </Grid.RowDefinitions>
+                    <ContentControl Grid.Row="0" Content="{Binding ListenersPanel}"/>
+                    <Border Grid.Row="1" Background="#30363D"/>
+                    <ContentControl Grid.Row="2" Content="{Binding PayloadsPanel}"/>
+                    <Border Grid.Row="3" Background="#30363D"/>
+                    <ContentControl Grid.Row="4" Content="{Binding ScriptsPanel}"/>
+                </Grid>
+
+                <!-- Divider -->
+                <Border Grid.Column="1" Background="#30363D"/>
+
+                <!-- Sessions panel -->
+                <ContentControl Grid.Column="2" Content="{Binding SessionsPanel}"/>
+            </Grid>
+        </Grid>
+
+        <!-- ── Status bar ── -->
+        <Border Grid.Row="2" Background="#161B22" BorderBrush="#30363D" BorderThickness="0,1,0,0">
+            <StackPanel Orientation="Horizontal" Spacing="16" Margin="14,0" VerticalAlignment="Center">
+                <StackPanel Orientation="Horizontal" Spacing="5" IsVisible="{Binding IsConnected}">
+                    <Ellipse Width="6" Height="6" Fill="#22C55E" VerticalAlignment="Center"/>
+                    <TextBlock Text="Connected" FontSize="11" Foreground="#6E7681"/>
+                    <TextBlock Text="·" FontSize="11" Foreground="#3D444D"/>
+                    <TextBlock Text="{Binding SessionsPanel.Sessions.Count, StringFormat='Sessions: {0}'}"
+                               FontSize="11" Foreground="#6E7681"/>
+                    <TextBlock Text="·" FontSize="11" Foreground="#3D444D"/>
+                    <TextBlock Text="{Binding ListenersPanel.Listeners.Count, StringFormat='Listeners: {0}'}"
+                               FontSize="11" Foreground="#6E7681"/>
+                    <TextBlock Text="·" FontSize="11" Foreground="#3D444D"/>
+                    <TextBlock Text="{Binding PayloadsPanel.Payloads.Count, StringFormat='Payloads: {0}'}"
+                               FontSize="11" Foreground="#6E7681"/>
+                </StackPanel>
+                <TextBlock IsVisible="{Binding IsNotConnected}" FontSize="11" Foreground="#6E7681"
+                           Text="Not connected"/>
+            </StackPanel>
+        </Border>
+
+    </Grid>
+</Window>

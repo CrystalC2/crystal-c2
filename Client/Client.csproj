@@ -1,0 +1,138 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ApplicationManifest>app.manifest</ApplicationManifest>
+        <AssemblyName>CrystalClient</AssemblyName>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <AvaloniaResource Include="Assets\**" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Protobuf Include="..\Server\Protos\auth.proto" GrpcServices="Client" />
+        <Protobuf Include="..\Server\Protos\beacons.proto" GrpcServices="Client" />
+        <Protobuf Include="..\Server\Protos\listeners.proto" GrpcServices="Client" />
+        <Protobuf Include="..\Server\Protos\payloads.proto" GrpcServices="Client" />
+        <Protobuf Include="..\Server\Protos\tasks.proto" GrpcServices="Client" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Avalonia" Version="11.3.14" />
+        <PackageReference Include="Avalonia.AvaloniaEdit" Version="11.3.0" />
+        <PackageReference Include="Avalonia.Desktop" Version="11.3.14" />
+        <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.14" />
+        <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.14" />
+        <PackageReference Include="AvaloniaUI.DiagnosticsSupport" Version="2.2.1">
+            <IncludeAssets Condition="'$(Configuration)' != 'Debug'">None</IncludeAssets>
+            <PrivateAssets Condition="'$(Configuration)' != 'Debug'">All</PrivateAssets>
+        </PackageReference>
+        <PackageReference Include="FluentAvaloniaUI" Version="2.5.1" />
+        <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="10.0.7" />
+        <PackageReference Include="ReactiveUI.Avalonia" Version="11.3.8" />
+        <PackageReference Include="Grpc.Net.Client" Version="2.67.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.29.3" />
+        <PackageReference Include="MoonSharp" Version="2.0.0" />
+        <PackageReference Include="Grpc.Tools" Version="2.67.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="MainWindow\MainWindowView.axaml.cs">
+        <DependentUpon>MainWindowView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Listeners\ListenersPanelView.axaml.cs">
+        <DependentUpon>ListenersPanelView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Listeners\CreateListenerView.axaml.cs">
+        <DependentUpon>CreateListenerView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Sessions\SessionsPanelView.axaml.cs">
+        <DependentUpon>SessionsPanelView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Sessions\SessionsGraphView.axaml.cs">
+        <DependentUpon>SessionsGraphView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Sessions\BeaconInteractionView.axaml.cs">
+        <DependentUpon>BeaconInteractionView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Scripts\ScriptEditor\ScriptEditorView.axaml.cs">
+        <DependentUpon>ScriptEditorView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Scripts\ScriptsPanelView.axaml.cs">
+        <DependentUpon>ScriptsPanelView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Scripts\ScriptConsoleView.axaml.cs">
+        <DependentUpon>ScriptConsoleView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Payloads\PayloadsPanelView.axaml.cs">
+        <DependentUpon>PayloadsPanelView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Payloads\AddPayloadView.axaml.cs">
+        <DependentUpon>AddPayloadView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+      <Compile Update="Payloads\GeneratePayloadView.axaml.cs">
+        <DependentUpon>GeneratePayloadView.axaml</DependentUpon>
+        <SubType>Code</SubType>
+      </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="crystalpalace.jar">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
+      <Content Include="windows.rgh">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\Beacon\beacon.spec">
+        <Link>Beacon\beacon.spec</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Beacon\bin\agent.x64.o">
+        <Link>Beacon\agent.x64.o</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Beacon\bin\agent.x86.o">
+        <Link>Beacon\agent.x86.o</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Beacon\bin\loader.x64.o">
+        <Link>Beacon\loader.x64.o</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Beacon\bin\loader.x86.o">
+        <Link>Beacon\loader.x86.o</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Beacon\bof.spec">
+        <Link>Beacon\bof.spec</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Beacon\libtcg.x64.zip">
+        <Link>Beacon\libtcg.x64.zip</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="..\Beacon\libtcg.x86.zip">
+        <Link>Beacon\libtcg.x86.zip</Link>
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,296 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Client.Sessions"
+             x:Class="Client.Sessions.SessionsPanelView"
+             x:DataType="vm:SessionsPanelViewModel"
+             Background="#0D1117">
+
+    <UserControl.Styles>
+        <Style Selector="TextBlock.col-header">
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="LetterSpacing" Value="0.5"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBlock.cell">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#E6EDF3"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+        <Style Selector="TextBlock.cell-mono">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Consolas,monospace"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="TextBlock.cell-dim">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#6E7681"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+        </Style>
+        <Style Selector="Border.row">
+            <Setter Property="Padding" Value="14,6"/>
+            <Setter Property="BorderBrush" Value="#21262D"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+        </Style>
+        <Style Selector="Border.row:pointerover">
+            <Setter Property="Background" Value="#161B22"/>
+        </Style>
+        <Style Selector="ContextMenu">
+            <Setter Property="Background" Value="#161B22"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+        </Style>
+        <Style Selector="MenuItem">
+            <Setter Property="Background" Value="#161B22"/>
+            <Setter Property="Foreground" Value="#E6EDF3"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style Selector="MenuItem:pointerover /template/ Border#PART_LayoutRoot">
+            <Setter Property="Background" Value="#21262D"/>
+        </Style>
+        <Style Selector="Button.col-header-btn">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+        <Style Selector="Button.col-header-btn:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TextElement.Foreground" Value="#E6EDF3"/>
+        </Style>
+        <Style Selector="Button.view-toggle">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="CornerRadius" Value="4"/>
+            <Setter Property="Padding" Value="5,2"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+        <Style Selector="Button.view-toggle:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#21262D"/>
+        </Style>
+
+        <!-- Tab strip -->
+        <Style Selector="TabControl#InteractionTabs">
+            <Setter Property="Background" Value="#0D1117"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="TabStripPlacement" Value="Top"/>
+        </Style>
+        <Style Selector="TabControl#InteractionTabs > TabStrip">
+            <Setter Property="Background" Value="#161B22"/>
+        </Style>
+        <Style Selector="TabControl#InteractionTabs TabItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+        </Style>
+        <!-- Zero out any bottom border baked into the template for all states -->
+        <Style Selector="TabControl#InteractionTabs TabItem /template/ Border#PART_LayoutRoot">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+        </Style>
+        <!-- Hide the built-in selection pipe -->
+        <Style Selector="TabControl#InteractionTabs TabItem /template/ Rectangle#PART_SelectedPipe">
+            <Setter Property="IsVisible" Value="False"/>
+        </Style>
+        <!-- Selected: purple underline via PART_LayoutRoot -->
+        <Style Selector="TabControl#InteractionTabs TabItem:selected /template/ Border#PART_LayoutRoot">
+            <Setter Property="Background" Value="#0D1117"/>
+            <Setter Property="BorderBrush" Value="#7C3AED"/>
+            <Setter Property="BorderThickness" Value="0,0,0,2"/>
+        </Style>
+        <Style Selector="TabControl#InteractionTabs TabItem:pointerover /template/ Border#PART_LayoutRoot">
+            <Setter Property="Background" Value="#21262D"/>
+        </Style>
+
+        <!-- Tab close button -->
+        <Style Selector="Button.tab-close">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="3,0"/>
+            <Setter Property="Foreground" Value="#484F58"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.tab-close:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="TextElement.Foreground" Value="#EF4444"/>
+        </Style>
+    </UserControl.Styles>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Panel header -->
+        <Border Grid.Row="0" Background="#161B22"
+                BorderBrush="#30363D" BorderThickness="0,0,0,1"
+                Padding="14,8">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="BEACON SESSIONS" FontSize="11" FontWeight="SemiBold"
+                           Foreground="#8B949E" LetterSpacing="1" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="2" VerticalAlignment="Center">
+                    <Button Classes="view-toggle"
+                            Command="{Binding ShowTableCommand}"
+                            Opacity="{Binding TableViewOpacity}"
+                            ToolTip.Tip="Table view">☰</Button>
+                    <Button Classes="view-toggle"
+                            Command="{Binding ShowGraphCommand}"
+                            Opacity="{Binding GraphViewOpacity}"
+                            ToolTip.Tip="Graph view">⬡</Button>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Vertical split: session list (top) + interaction tabs (bottom) -->
+        <Grid Grid.Row="1" RowDefinitions="*,4,*">
+
+            <!-- ── Top: session table / graph ── -->
+            <Grid Grid.Row="0">
+
+                <!-- Table view -->
+                <Grid IsVisible="{Binding !IsGraphView}" RowDefinitions="Auto,*">
+
+                    <!-- Column headers -->
+                    <Border Grid.Row="0" Background="#0D1117"
+                            BorderBrush="#21262D" BorderThickness="0,0,0,1"
+                            Padding="14,5">
+                        <Grid ColumnDefinitions="50,*,*,*,*,*,*,*,*,*">
+                            <TextBlock Grid.Column="0"/>
+                            <Button Grid.Column="1" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="Listener">
+                                <TextBlock Text="{Binding ListenerHeader}" Classes="col-header"/>
+                            </Button>
+                            <Button Grid.Column="2" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="IP">
+                                <TextBlock Text="{Binding IpHeader}" Classes="col-header"/>
+                            </Button>
+                            <Button Grid.Column="3" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="User">
+                                <TextBlock Text="{Binding UserHeader}" Classes="col-header"/>
+                            </Button>
+                            <Button Grid.Column="4" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="Computer">
+                                <TextBlock Text="{Binding ComputerHeader}" Classes="col-header"/>
+                            </Button>
+                            <Button Grid.Column="5" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="Process">
+                                <TextBlock Text="{Binding ProcessHeader}" Classes="col-header"/>
+                            </Button>
+                            <Button Grid.Column="6" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="PID">
+                                <TextBlock Text="{Binding PidHeader}" Classes="col-header"/>
+                            </Button>
+                            <Button Grid.Column="7" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="Arch">
+                                <TextBlock Text="{Binding ArchHeader}" Classes="col-header"/>
+                            </Button>
+                            <Button Grid.Column="8" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="OS">
+                                <TextBlock Text="{Binding OsHeader}" Classes="col-header"/>
+                            </Button>
+                            <Button Grid.Column="9" Classes="col-header-btn" Command="{Binding SortCommand}" CommandParameter="Last">
+                                <TextBlock Text="{Binding LastHeader}" Classes="col-header"/>
+                            </Button>
+                        </Grid>
+                    </Border>
+
+                    <!-- Session rows + empty state -->
+                    <Grid Grid.Row="1">
+                        <ScrollViewer VerticalScrollBarVisibility="Auto"
+                                      IsVisible="{Binding !HasNoSessions}">
+                            <ItemsControl ItemsSource="{Binding Sessions}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="vm:BeaconSessionViewModel">
+                                        <Border Classes="row"
+                                                DoubleTapped="OnRowDoubleTapped">
+                                            <Border.ContextMenu>
+                                                <ContextMenu>
+                                                    <MenuItem Header="Interact"
+                                                              Click="OnInteractMenuItemClicked"/>
+                                                    <MenuItem Header="Delete Session"
+                                                              Command="{Binding DeleteCommand}"/>
+                                                </ContextMenu>
+                                            </Border.ContextMenu>
+                                            <Grid ColumnDefinitions="50,*,*,*,*,*,*,*,*,*">
+                                                <Ellipse Grid.Column="0" Width="8" Height="8"
+                                                         Fill="{Binding HealthBrush}"
+                                                         VerticalAlignment="Center"
+                                                         ToolTip.Tip="{Binding Health}"/>
+                                                <TextBlock Grid.Column="1" Classes="cell-dim"
+                                                           Text="{Binding Listener}"/>
+                                                <TextBlock Grid.Column="2" Classes="cell-mono"
+                                                           Text="{Binding InternalIp}"/>
+                                                <TextBlock Grid.Column="3" Classes="cell"
+                                                           Text="{Binding UserDisplay}"/>
+                                                <TextBlock Grid.Column="4" Classes="cell"
+                                                           Text="{Binding Computer}"/>
+                                                <TextBlock Grid.Column="5" Classes="cell"
+                                                           Text="{Binding Process}"/>
+                                                <TextBlock Grid.Column="6" Classes="cell-mono"
+                                                           Text="{Binding Pid}"/>
+                                                <TextBlock Grid.Column="7" Classes="cell-dim"
+                                                           Text="{Binding ArchDisplay}"/>
+                                                <TextBlock Grid.Column="8" Classes="cell-mono"
+                                                           Text="{Binding OsDisplay}"/>
+                                                <TextBlock Grid.Column="9" Classes="cell-mono"
+                                                           Text="{Binding LastSeenDisplay}"/>
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </ScrollViewer>
+
+                        <StackPanel IsVisible="{Binding HasNoSessions}"
+                                    HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Spacing="8" Opacity="0.35">
+                            <TextBlock Text="No active sessions" FontSize="14"
+                                       Foreground="#8B949E" HorizontalAlignment="Center"/>
+                            <TextBlock Text="Waiting for beacon connections…" FontSize="12"
+                                       Foreground="#6E7681" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
+                </Grid>
+
+                <!-- Graph view -->
+                <Grid IsVisible="{Binding IsGraphView}">
+                    <vm:SessionsGraphView x:Name="GraphView"/>
+
+                    <StackPanel IsVisible="{Binding HasNoSessions}"
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Spacing="8" Opacity="0.35">
+                        <TextBlock Text="No active sessions" FontSize="14"
+                                   Foreground="#8B949E" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Waiting for beacon connections…" FontSize="12"
+                                   Foreground="#6E7681" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Grid>
+            </Grid>
+
+            <!-- Drag handle -->
+            <GridSplitter Grid.Row="1"
+                          ResizeDirection="Rows"
+                          Background="#30363D"
+                          HorizontalAlignment="Stretch"/>
+
+            <!-- ── Bottom: interaction tabs ── -->
+            <Grid Grid.Row="2">
+                <TabControl x:Name="InteractionTabs" Background="#0D1117"/>
+
+                <!-- Placeholder when no tabs are open -->
+                <Border x:Name="NoTabsHint"
+                        IsVisible="True"
+                        IsHitTestVisible="False">
+                    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Spacing="6" Opacity="0.3">
+                        <TextBlock Text="No open sessions" FontSize="13"
+                                   Foreground="#8B949E" HorizontalAlignment="Center"/>
+                        <TextBlock Text="Double-click a beacon to interact" FontSize="12"
+                                   Foreground="#6E7681" HorizontalAlignment="Center"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+        </Grid>
+    </Grid>
+</UserControl>

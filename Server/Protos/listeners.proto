@@ -1,0 +1,44 @@
+syntax = "proto3";
+
+option csharp_namespace = "CrystalC2.Listeners";
+
+package listeners;
+
+import "google/protobuf/empty.proto";
+
+service ListenerProtoService {
+  rpc CreateListener (CreateListenerRequest) returns (google.protobuf.Empty);
+  rpc DeleteListener (DeleteListenerRequest) returns (google.protobuf.Empty);
+  rpc ListenerEvents (google.protobuf.Empty) returns (stream ListenerEvent);
+}
+
+enum ListenerEventType {
+  LISTENER_EVENT_UNKNOWN = 0;
+  LISTENER_EVENT_ADDED   = 1;
+  LISTENER_EVENT_DELETED = 2;
+}
+
+message ListenerEvent {
+  ListenerInfo      listener = 1;
+  ListenerEventType type     = 2;
+}
+
+message ListenerInfo {
+  uint32 id         = 1;
+  string name       = 2;
+  uint32 bind_port  = 3;
+  bytes  x86_coff   = 4;
+  bytes  x64_coff   = 5;
+  bytes  public_key = 6;
+}
+
+message CreateListenerRequest {
+  string name      = 1;
+  uint32 bind_port = 2;
+  bytes  x86_coff  = 3;
+  bytes  x64_coff  = 4;
+}
+
+message DeleteListenerRequest {
+  uint32 id = 1;
+}

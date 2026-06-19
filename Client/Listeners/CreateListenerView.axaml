@@ -1,0 +1,108 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Client.Listeners"
+        x:Class="Client.Listeners.CreateListenerView"
+        x:DataType="vm:CreateListenerViewModel"
+        Title="Create Listener"
+        Width="440" SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="#161B22"
+        Icon="/Assets/logo.png">
+
+    <Window.Styles>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="LetterSpacing" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+        <Style Selector="TextBox.field">
+            <Setter Property="Background" Value="#0D1117"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="Foreground" Value="#E6EDF3"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+        </Style>
+        <Style Selector="TextBox.field:focus">
+            <Setter Property="BorderBrush" Value="#7C3AED"/>
+        </Style>
+        <Style Selector="Button.secondary">
+            <Setter Property="Background" Value="#21262D"/>
+            <Setter Property="Foreground" Value="#E6EDF3"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="16,9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#30363D"/>
+        </Style>
+        <Style Selector="Button.browse">
+            <Setter Property="Background" Value="#21262D"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="MinWidth" Value="80"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+
+        <TextBlock Grid.Row="0" Text="New Listener" FontSize="17" FontWeight="SemiBold"
+                   Foreground="#E6EDF3" Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1" Spacing="16">
+
+            <!-- Name -->
+            <StackPanel>
+                <TextBlock Text="Name" Classes="label"/>
+                <TextBox Classes="field" Text="{Binding Name}" Watermark="e.g. http-443"/>
+            </StackPanel>
+
+            <!-- Bind Port -->
+            <StackPanel>
+                <TextBlock Text="Bind Port" Classes="label"/>
+                <TextBox Classes="field" Text="{Binding Port}" Watermark="4444"/>
+            </StackPanel>
+
+            <!-- x86 COFF -->
+            <StackPanel>
+                <TextBlock Text="x86 COFF" Classes="label"/>
+                <Grid ColumnDefinitions="*,8,Auto">
+                    <TextBox Grid.Column="0" Classes="field" Text="{Binding X86Path}"
+                             IsReadOnly="True" Watermark="No file selected"
+                             Foreground="#6E7681"/>
+                    <Button Grid.Column="2" Classes="browse" Content="Browse"
+                            Click="OnBrowseX86Clicked"/>
+                </Grid>
+            </StackPanel>
+
+            <!-- x64 COFF -->
+            <StackPanel>
+                <TextBlock Text="x64 COFF" Classes="label"/>
+                <Grid ColumnDefinitions="*,8,Auto">
+                    <TextBox Grid.Column="0" Classes="field" Text="{Binding X64Path}"
+                             IsReadOnly="True" Watermark="No file selected"
+                             Foreground="#6E7681"/>
+                    <Button Grid.Column="2" Classes="browse" Content="Browse"
+                            Click="OnBrowseX64Clicked"/>
+                </Grid>
+            </StackPanel>
+
+        </StackPanel>
+
+        <!-- Footer buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,8,Auto" Margin="0,20,0,0">
+            <Button Grid.Column="0" Classes="secondary" Content="Cancel" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center" Click="OnCancelClicked"/>
+            <Button Grid.Column="2" Classes="primary" Content="Create" MinWidth="100"
+                    HorizontalContentAlignment="Center" Click="OnCreateClicked"
+                    IsEnabled="{Binding IsValid}"/>
+        </Grid>
+    </Grid>
+</Window>

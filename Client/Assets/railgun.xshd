@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<SyntaxDefinition name="Railgun" xmlns="http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008">
+  <Color name="Comment"  foreground="#6A9955" fontStyle="italic"/>
+  <Color name="Keyword"  foreground="#C586C0" fontWeight="bold"/>
+  <Color name="Variable" foreground="#9CDCFE"/>
+  <Color name="String"   foreground="#CE9178"/>
+  <Color name="Number"   foreground="#B5CEA8"/>
+  <Color name="Builtin"  foreground="#DCDCAA"/>
+
+  <RuleSet>
+
+    <!-- Wide string literals: L"..." -->
+    <Span color="String">
+      <Begin>L"</Begin>
+      <End>"</End>
+    </Span>
+
+    <!-- Regular string literals: "..." -->
+    <Span color="String">
+      <Begin>"</Begin>
+      <End>"</End>
+    </Span>
+
+    <!-- Line comments: \# needed because AvaloniaEdit compiles rules with IgnorePatternWhitespace -->
+    <Rule color="Comment">\#[^\n]*</Rule>
+
+    <!-- Hex integers -->
+    <Rule color="Number">0x[0-9a-fA-F]+</Rule>
+
+    <!-- Decimal integers -->
+    <Rule color="Number">\b[0-9]+\b</Rule>
+
+    <!-- Variables: $name -->
+    <Rule color="Variable">\$[a-zA-Z_][a-zA-Z0-9_]*</Rule>
+
+    <!-- Beacon built-in functions -->
+    <Keywords color="Builtin">
+      <Word>BeaconPrintf</Word>
+      <Word>BeaconOutput</Word>
+      <Word>BeaconIsAdmin</Word>
+      <Word>buf</Word>
+    </Keywords>
+
+    <!-- Language keywords -->
+    <Keywords color="Keyword">
+      <Word>import</Word>
+      <Word>include</Word>
+      <Word>define</Word>
+      <Word>if</Word>
+      <Word>else</Word>
+      <Word>while</Word>
+    </Keywords>
+
+  </RuleSet>
+</SyntaxDefinition>

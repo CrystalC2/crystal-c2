@@ -1,0 +1,6 @@
+.idea/
+[Bb]in/
+[Oo]bj/
+data.db
+data.db-shm
+data.db-wal

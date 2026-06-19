@@ -1,0 +1,247 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Client.Scripts.ScriptEditor"
+        xmlns:payloads="using:Client.Payloads"
+        xmlns:ae="clr-namespace:AvaloniaEdit;assembly=AvaloniaEdit"
+        x:Class="Client.Scripts.ScriptEditor.ScriptEditorView"
+        x:DataType="vm:ScriptEditorViewModel"
+        Title="{Binding Title}"
+        Width="1000" Height="750"
+        MinWidth="600" MinHeight="420"
+        WindowStartupLocation="CenterOwner"
+        Background="#0D1117"
+        Icon="/Assets/logo.png">
+
+    <Window.Styles>
+        <Style Selector="Button.toolbar">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="Background" Value="#21262D"/>
+            <Setter Property="Foreground" Value="#C9D1D9"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.toolbar:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#30363D"/>
+        </Style>
+        <Style Selector="Button.go">
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="16,5"/>
+            <Setter Property="Background" Value="#7C3AED"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#7C3AED"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.go:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#6D28D9"/>
+        </Style>
+
+        <!-- Args panel styles -->
+        <Style Selector="ComboBox.arg-type">
+            <Setter Property="Background" Value="#0D1117"/>
+            <Setter Property="Foreground" Value="#C9D1D9"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="BorderThickness" Value="1,1,0,1"/>
+            <Setter Property="CornerRadius" Value="4,0,0,4"/>
+            <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,monospace"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Width" Value="52"/>
+        </Style>
+        <Style Selector="ComboBox.arg-type /template/ Border#Background">
+            <Setter Property="Background" Value="#0D1117"/>
+        </Style>
+        <Style Selector="ComboBox.arg-type:pointerover /template/ Border#Background">
+            <Setter Property="Background" Value="#161B22"/>
+        </Style>
+        <Style Selector="TextBox.arg-value">
+            <Setter Property="Background" Value="#0D1117"/>
+            <Setter Property="Foreground" Value="#C9D1D9"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="BorderThickness" Value="1,1,0,1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="CaretBrush" Value="#7C3AED"/>
+            <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,monospace"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="140"/>
+        </Style>
+        <Style Selector="TextBox.arg-value:focus /template/ Border#PART_BorderElement">
+            <Setter Property="BorderBrush" Value="#7C3AED"/>
+        </Style>
+        <Style Selector="Button.arg-remove">
+            <Setter Property="Background" Value="#21262D"/>
+            <Setter Property="Foreground" Value="#484F58"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="0,4,4,0"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Width" Value="26"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="HorizontalContentAlignment" Value="Center"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+        </Style>
+        <Style Selector="Button.arg-remove:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#3D1515"/>
+            <Setter Property="TextElement.Foreground" Value="#EF4444"/>
+        </Style>
+        <Style Selector="ComboBox.arg-payload">
+            <Setter Property="Background" Value="#0D1117"/>
+            <Setter Property="Foreground" Value="#C9D1D9"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="BorderThickness" Value="1,1,0,1"/>
+            <Setter Property="CornerRadius" Value="0"/>
+            <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,monospace"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Padding" Value="6,3"/>
+            <Setter Property="MinHeight" Value="0"/>
+            <Setter Property="MinWidth" Value="140"/>
+        </Style>
+        <Style Selector="ComboBox.arg-payload /template/ Border#Background">
+            <Setter Property="Background" Value="#0D1117"/>
+        </Style>
+        <Style Selector="ComboBox.arg-payload:pointerover /template/ Border#Background">
+            <Setter Property="Background" Value="#161B22"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto,Auto">
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#161B22"
+                BorderBrush="#30363D" BorderThickness="0,0,0,1"
+                Padding="14,9">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Ellipse Width="8" Height="8"
+                         Fill="{Binding Session.HealthBrush}"
+                         VerticalAlignment="Center"/>
+                <TextBlock Text="{Binding Title}"
+                           FontFamily="Cascadia Mono,Consolas,monospace"
+                           FontSize="13" FontWeight="SemiBold"
+                           Foreground="#E6EDF3" VerticalAlignment="Center"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Toolbar -->
+        <Border Grid.Row="1" Background="#161B22"
+                BorderBrush="#30363D" BorderThickness="0,0,0,1"
+                Padding="10,6">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+                <Button Classes="toolbar" Content="Load" Command="{Binding LoadCommand}"/>
+                <Button Classes="toolbar" Content="Save" Command="{Binding SaveCommand}"/>
+                <Rectangle Width="1" Fill="#30363D" Margin="4,2"/>
+                <Button Classes="go" Content="&#x25B6;  Go" Command="{Binding GoCommand}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- Arguments panel -->
+        <Border Grid.Row="2" Background="#161B22"
+                BorderBrush="#30363D" BorderThickness="0,0,0,1"
+                Padding="10,6">
+            <Grid ColumnDefinitions="*,Auto" RowDefinitions="Auto,Auto">
+
+                <!-- Section label -->
+                <TextBlock Grid.Row="0" Grid.Column="0"
+                           Text="Arguments"
+                           FontSize="10" FontWeight="SemiBold"
+                           Foreground="#484F58" LetterSpacing="0.5"
+                           VerticalAlignment="Center"
+                           Margin="0,0,0,4"
+                           IsVisible="{Binding Args.Count}"/>
+
+                <!-- Add button, aligned to top-right always -->
+                <Button Grid.Row="0" Grid.Column="1" Grid.RowSpan="2"
+                        Classes="toolbar"
+                        Content="+ Arg"
+                        Command="{Binding AddArgCommand}"
+                        FontSize="11" Padding="8,4"
+                        VerticalAlignment="Top"/>
+
+                <!-- Arg rows -->
+                <ItemsControl Grid.Row="1" Grid.Column="0"
+                              ItemsSource="{Binding Args}"
+                              Margin="0,0,8,0">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate x:DataType="vm:RailgunArgViewModel">
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                <ComboBox Classes="arg-type"
+                                          ItemsSource="{x:Static vm:RailgunArgViewModel.AvailableTypes}"
+                                          SelectedItem="{Binding SelectedType}"
+                                          ToolTip.Tip="i = Int32   z = ANSI string   Z = Wide string   payload = Payload store bytes (packs i:len + b:bytes; call arg_int() then arg_bytes())"/>
+                                <TextBox Classes="arg-value"
+                                         Text="{Binding Value}"
+                                         Watermark="value"
+                                         IsVisible="{Binding IsTextArg}"/>
+                                <ComboBox Classes="arg-payload"
+                                          ItemsSource="{Binding Payloads}"
+                                          SelectedItem="{Binding SelectedPayload}"
+                                          IsVisible="{Binding IsPayloadArg}"
+                                          ToolTip.Tip="{Binding SelectedPayload.Note}">
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate x:DataType="payloads:PayloadItemViewModel">
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontFamily="Cascadia Mono,Consolas,monospace"
+                                                       FontSize="12"/>
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                                <Button Classes="arg-remove"
+                                        Content="×"
+                                        Command="{Binding RemoveCommand}"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </Grid>
+        </Border>
+
+        <!-- AvaloniaEdit code editor -->
+        <ae:TextEditor Grid.Row="3"
+                       x:Name="Editor"
+                       FontFamily="Cascadia Mono,Consolas,monospace"
+                       FontSize="13"
+                       Background="#0D1117"
+                       Foreground="#E6EDF3"
+                       ShowLineNumbers="True"
+                       WordWrap="False"
+                       HorizontalScrollBarVisibility="Auto"
+                       VerticalScrollBarVisibility="Auto"/>
+
+        <!-- Output (visible when script produces output) -->
+        <Border Grid.Row="4"
+                IsVisible="{Binding HasOutput}"
+                Background="#0A0D13"
+                BorderBrush="#30363D" BorderThickness="0,1,0,0"
+                MaxHeight="180">
+            <ScrollViewer x:Name="OutputScroll"
+                          VerticalScrollBarVisibility="Auto"
+                          Padding="14,8">
+                <SelectableTextBlock Text="{Binding Output}"
+                                     FontFamily="Cascadia Mono,Consolas,monospace"
+                                     FontSize="12"
+                                     Foreground="#8B949E"
+                                     TextWrapping="Wrap"/>
+            </ScrollViewer>
+        </Border>
+
+        <!-- Status bar -->
+        <Border Grid.Row="5" Background="#161B22"
+                BorderBrush="#30363D" BorderThickness="0,1,0,0"
+                Padding="14,4">
+            <TextBlock Text="{Binding Status}"
+                       FontFamily="Cascadia Mono,Consolas,monospace"
+                       FontSize="11"
+                       Foreground="{Binding StatusForeground}"
+                       VerticalAlignment="Center"/>
+        </Border>
+
+    </Grid>
+</Window>

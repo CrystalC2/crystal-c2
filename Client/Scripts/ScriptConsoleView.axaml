@@ -1,0 +1,64 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Client.Scripts"
+        x:Class="Client.Scripts.ScriptConsoleView"
+        x:DataType="vm:ScriptConsoleViewModel"
+        Title="Script Console"
+        Width="1280" Height="720"
+        MinWidth="500" MinHeight="300"
+        WindowStartupLocation="CenterOwner"
+        Background="#0D1117">
+
+    <Window.Styles>
+        <Style Selector="TextBlock.log-line">
+            <Setter Property="FontFamily" Value="Cascadia Mono,Consolas,monospace"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="TextWrapping" Value="Wrap"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*">
+
+        <!-- Header -->
+        <Border Grid.Row="0" Background="#161B22"
+                BorderBrush="#30363D" BorderThickness="0,0,0,1"
+                Padding="14,9">
+            <Grid ColumnDefinitions="*,Auto">
+                <TextBlock Text="{Binding Title}"
+                           FontSize="13" FontWeight="SemiBold"
+                           Foreground="#E6EDF3" VerticalAlignment="Center"/>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Spacing="6">
+                    <Button Content="Reload"
+                            Command="{Binding ReloadCommand}"
+                            FontSize="12" Padding="10,5"
+                            VerticalAlignment="Center"
+                            Background="#21262D" Foreground="#8B949E"
+                            BorderBrush="#30363D" BorderThickness="1"
+                            CornerRadius="6" Cursor="Hand"/>
+                    <Button Content="Clear"
+                            Click="OnClearClicked"
+                            FontSize="12" Padding="10,5"
+                            VerticalAlignment="Center"
+                            Background="#21262D" Foreground="#8B949E"
+                            BorderBrush="#30363D" BorderThickness="1"
+                            CornerRadius="6" Cursor="Hand"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Output -->
+        <ScrollViewer Grid.Row="1" x:Name="LogScroll"
+                      VerticalScrollBarVisibility="Auto"
+                      Padding="14,10">
+            <ItemsControl ItemsSource="{Binding Log}">
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate x:DataType="vm:ScriptLogEntry">
+                        <TextBlock Classes="log-line" Text="{Binding Display}" Margin="0,1"/>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+    </Grid>
+</Window>

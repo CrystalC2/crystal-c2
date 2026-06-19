@@ -1,0 +1,44 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "CrystalC2.Payloads";
+
+package payloads;
+
+import "google/protobuf/empty.proto";
+
+service PayloadProtoService {
+  rpc AddPayload    (AddPayloadRequest)     returns (google.protobuf.Empty);
+  rpc DeletePayload (DeletePayloadRequest)  returns (google.protobuf.Empty);
+  rpc PayloadEvents (google.protobuf.Empty) returns (stream PayloadEvent);
+}
+
+enum PayloadEventType {
+  PAYLOAD_EVENT_UNKNOWN = 0;
+  PAYLOAD_EVENT_ADDED   = 1;
+  PAYLOAD_EVENT_DELETED = 2;
+}
+
+message PayloadEvent {
+  PayloadInfo      payload = 1;
+  PayloadEventType type    = 2;
+}
+
+message PayloadInfo {
+  uint32          id      = 1;
+  string          name    = 2;
+  string          user    = 3;
+  bytes           payload = 4;
+  optional string yara    = 5;
+  optional string note    = 6;
+}
+
+message AddPayloadRequest {
+  string          name    = 1;
+  bytes           payload = 2;
+  optional string yara    = 3;
+  optional string note    = 4;
+}
+
+message DeletePayloadRequest {
+  uint32 id = 1;
+}

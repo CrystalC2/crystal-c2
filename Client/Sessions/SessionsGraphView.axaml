@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="Client.Sessions.SessionsGraphView"
+             Background="#0D1117"
+             ClipToBounds="True">
+    <Grid>
+        <Canvas x:Name="PART_EdgeCanvas"/>
+        <Canvas x:Name="PART_NodeCanvas"/>
+    </Grid>
+</UserControl>

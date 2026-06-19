@@ -1,0 +1,165 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Client.Payloads"
+        xmlns:listeners="using:Client.Listeners"
+        x:Class="Client.Payloads.GeneratePayloadView"
+        x:DataType="vm:GeneratePayloadViewModel"
+        Title="Generate Payload"
+        Width="460" SizeToContent="Height"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Background="#161B22"
+        Icon="/Assets/logo.png">
+
+    <Window.Styles>
+        <Style Selector="TextBlock.label">
+            <Setter Property="FontSize" Value="11"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="LetterSpacing" Value="1"/>
+            <Setter Property="Margin" Value="0,0,0,5"/>
+        </Style>
+        <Style Selector="TextBox.field">
+            <Setter Property="Background" Value="#0D1117"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="Foreground" Value="#E6EDF3"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+        </Style>
+        <Style Selector="TextBox.field:focus">
+            <Setter Property="BorderBrush" Value="#7C3AED"/>
+        </Style>
+        <Style Selector="ComboBox.field">
+            <Setter Property="Background" Value="#0D1117"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="Foreground" Value="#E6EDF3"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+        <Style Selector="ComboBox.field:focus">
+            <Setter Property="BorderBrush" Value="#7C3AED"/>
+        </Style>
+        <Style Selector="Button.secondary">
+            <Setter Property="Background" Value="#21262D"/>
+            <Setter Property="Foreground" Value="#E6EDF3"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="16,9"/>
+            <Setter Property="Cursor" Value="Hand"/>
+        </Style>
+        <Style Selector="Button.secondary:pointerover /template/ ContentPresenter">
+            <Setter Property="Background" Value="#30363D"/>
+        </Style>
+        <Style Selector="Button.browse">
+            <Setter Property="Background" Value="#21262D"/>
+            <Setter Property="Foreground" Value="#8B949E"/>
+            <Setter Property="CornerRadius" Value="6"/>
+            <Setter Property="Padding" Value="10,8"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#30363D"/>
+            <Setter Property="MinWidth" Value="80"/>
+        </Style>
+    </Window.Styles>
+
+    <Grid RowDefinitions="Auto,*,Auto" Margin="24">
+
+        <TextBlock Grid.Row="0" Text="Generate Payload" FontSize="17" FontWeight="SemiBold"
+                   Foreground="#E6EDF3" Margin="0,0,0,20"/>
+
+        <StackPanel Grid.Row="1" Spacing="16">
+
+            <!-- Listener -->
+            <StackPanel>
+                <TextBlock Text="Listener" Classes="label"/>
+                <ComboBox Classes="field"
+                          ItemsSource="{Binding Listeners}"
+                          SelectedItem="{Binding SelectedListener}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate x:DataType="listeners:ListenerItemViewModel">
+                            <TextBlock Text="{Binding Name}" Foreground="#E6EDF3"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </StackPanel>
+
+            <!-- Architecture -->
+            <StackPanel>
+                <TextBlock Text="Architecture" Classes="label"/>
+                <ComboBox Classes="field"
+                          ItemsSource="{Binding ArchOptions}"
+                          SelectedItem="{Binding Arch}"/>
+            </StackPanel>
+
+            <!-- Exit Function -->
+            <StackPanel>
+                <TextBlock Text="Exit Function" Classes="label"/>
+                <ComboBox Classes="field"
+                          ItemsSource="{Binding ExitFuncOptions}"
+                          SelectedItem="{Binding ExitFunc}"/>
+            </StackPanel>
+
+            <!-- Sleep / Jitter -->
+            <Grid ColumnDefinitions="*,16,*">
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Sleep (s)" Classes="label"/>
+                    <TextBox Classes="field" Text="{Binding Sleep}" Watermark="60"/>
+                </StackPanel>
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Jitter (%)" Classes="label"/>
+                    <TextBox Classes="field" Text="{Binding Jitter}" Watermark="20"/>
+                </StackPanel>
+            </Grid>
+
+            <!-- Config Spec (optional) -->
+            <StackPanel>
+                <TextBlock Text="Config Spec (optional)" Classes="label"/>
+                <Grid ColumnDefinitions="*,8,Auto">
+                    <TextBox Grid.Column="0" Classes="field" Text="{Binding SpecPath}"
+                             IsReadOnly="True" Watermark="No file selected"
+                             Foreground="#6E7681"/>
+                    <Button Grid.Column="2" Classes="browse" Content="Browse"
+                            Click="OnBrowseSpecClicked"/>
+                </Grid>
+            </StackPanel>
+
+            <!-- Options -->
+            <StackPanel Spacing="10">
+                <CheckBox IsChecked="{Binding GenerateYara}"
+                          Foreground="#E6EDF3" FontSize="13"
+                          Content="Generate YARA rules"/>
+            </StackPanel>
+
+            <!-- Add to payload store -->
+            <StackPanel Spacing="10">
+                <CheckBox IsChecked="{Binding AddToStore}"
+                          Foreground="#E6EDF3" FontSize="13"
+                          Content="Add to payload store"/>
+                <StackPanel IsVisible="{Binding AddToStore}" Spacing="12">
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Payload Name" Classes="label"/>
+                        <TextBox Classes="field" Text="{Binding PayloadName}"
+                                 Watermark="e.g. beacon-http-x64"/>
+                    </StackPanel>
+                    <StackPanel Spacing="5">
+                        <TextBlock Text="Note (optional)" Classes="label"/>
+                        <TextBox Classes="field" Text="{Binding PayloadNote}"
+                                 Watermark="e.g. x64 stageless"/>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+        </StackPanel>
+
+        <!-- Footer buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,8,Auto" Margin="0,20,0,0">
+            <Button Grid.Column="0" Classes="secondary" Content="Cancel" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center" Click="OnCancelClicked"/>
+            <Button Grid.Column="2" Classes="primary" Content="Generate" MinWidth="100"
+                    HorizontalContentAlignment="Center" Click="OnGenerateClicked"
+                    IsEnabled="{Binding IsValid}"/>
+        </Grid>
+
+    </Grid>
+</Window>
