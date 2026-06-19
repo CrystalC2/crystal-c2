@@ -1,0 +1,7 @@
+﻿<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="SharpC2" type="CompoundRunConfigurationType">
+    <toRun name="Server: http" type="LaunchSettings" />
+    <toRun name="Client" type="DotNetProject" />
+    <method v="2" />
+  </configuration>
+</component>
