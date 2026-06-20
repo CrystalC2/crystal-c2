@@ -27,6 +27,9 @@
       <None Remove=".gitignore" />
       <None Remove="LICENSE" />
       <None Remove="README.md" />
+      <None Update="run.sh">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </None>
     </ItemGroup>
 
 </Project>
